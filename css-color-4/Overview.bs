@@ -5,7 +5,7 @@ Prepare for TR: no
 Work Status: Testing
 ED: https://drafts.csswg.org/css-color-4/
 TR: https://www.w3.org/TR/css-color-4/
-Previous Version: https://www.w3.org/TR/2022/CR-css-color-4-20221101/
+Previous Version: hhttps://www.w3.org/TR/2024/CRD-css-color-4-20240213/
 Shortname: css-color
 Group: csswg
 Level: 4
@@ -36,9 +36,9 @@ spec: css-borders-4; type: property; text: border-bottom-color
 spec: css-borders-4; type: property; text: border-right-color
 </pre>
 
-<!-- see wpt results
-  https://wpt.fyi/results/css/css-color?label=master&label=experimental&aligned&q=css%2Fcss-color%2Fdeprecated*
--->
+<!-- 
+	https://web.archive.org/web/20240206032232/https://hajim.rochester.edu/ece/sites/gsharma/ciede2000/
+ -->
 
 <pre class=biblio>
 	{
@@ -159,6 +159,8 @@ Introduction</h2>
 
 	<em>This section is not normative.</em>
 
+	<wpt title="This section is not normative, it does not need tests."></wpt>
+
 	This module describes CSS properties which
 	allow authors to specify
 	the foreground color and opacity of the text content of an element.
@@ -178,7 +180,7 @@ Introduction</h2>
 	even if the display device supported them.
 
 
-	A <a href="https://test.csswg.org/harness/results/css-color-4_dev/grouped/">draft implementation report</a> is available.
+	A <a href="https://drafts.csswg.org/css-color-4/test-coverage">draft implementation report</a> is available.
 
 <h3 id="values">
 Value Definitions</h3>
@@ -204,6 +206,8 @@ Value Definitions</h3>
 -->
 
 <h2 id="terminology">Color Terminology</h2>
+
+<wpt title="This section provides definitions used later, it does not need tests."></wpt>
 
 	A <dfn export>color</dfn> is a definition (numeric or textual)
 	of the human visual perception of a light
@@ -276,7 +280,7 @@ Value Definitions</h3>
 	<abbr title="the intensity per unit area, or 'how bright it is'">luminance</abbr>).
 
 	In an additive color space, calculations can be done
-	to accurately predict color mixing. Most RGB spaces
+	to <em>accurately predict</em> color mixing. Most RGB spaces
 	are not additive, because the components are
 	<em>gamma encoded</em>. Undoing this gamma encoding
 	produces linear-light values.
@@ -335,7 +339,7 @@ Value Definitions</h3>
 		</figcaption>
 	</figure>
 
-	RGB color spaces are additive,
+	Thus, once linearized, RGB color spaces are additive,
 	and their gamut is defined
 	by the chromaticities of the red, green and blue primaries,
 	plus the chromaticity of the <dfn export>white point</dfn>
@@ -499,6 +503,8 @@ Value Definitions</h3>
 <h3 id="accessibility">
 Accessibility and Conveying Information By Color</h3>
 
+<wpt title="This section provides authoring guidance, it does not need tests."></wpt>
+
 	Although colors can add significant information to documents
 	and make them more readable,
 	color by itself should not be the sole means to convey important information.
@@ -600,7 +606,7 @@ Transparency: the 'opacity' property</h3>
 
 	<pre class=propdef>
 	Name: opacity
-	Value: <<alpha-value>>
+	Value: <<opacity-value>>
 	Initial: 1
 	Applies to: all elements
 	Inherited: no
@@ -633,14 +639,14 @@ Transparency: the 'opacity' property</h3>
 	</wpt>
 
 	<dl>
-		<dt><dfn dfn-for="opacity"><<alpha-value>></dfn>
+		<dt><dfn dfn-for="opacity"><<opacity-value>></dfn>
 		<dd>
 			The opacity to be applied to the element.
 			The resulting opacity is applied to the entire element,
 			rather than a particular color.
 
 			Opacity values outside the range [0,1] are not invalid,
-			and a preserved in specified values,
+			and are preserved in specified values,
 			but are clamped to the range [0, 1]
 			in computed values.
 	</dl>
@@ -649,9 +655,13 @@ Transparency: the 'opacity' property</h3>
 		inline-opacity-float-child.html
 	</wpt>
 
-	Opacity in CSS is typically represented using the <<alpha-value>> syntax,
-	for example in the 'opacity' property
-	or as the [=alpha component=] in a [=color function=].
+	Opacity in CSS is represented using the <<opacity-value>> syntax,
+	for example in the 'opacity' property.
+
+	<pre class='prod'>
+		<<opacity-value>> = <<number>> | <<percentage>>
+	</pre>
+
 	Represented as a <<number>>, the useful range of the value is ''0''
 	(representing full transparency)
 	to ''1''
@@ -691,7 +701,7 @@ Transparency: the 'opacity' property</h3>
 
 	If separate opacity for each glyph is desired,
 	it can be achieved by using a color value
-	which includes opacity,
+	which includes alpha,
 	rather than setting the 'opacity' property.
 
 	If a box has 'opacity' less than 1,
@@ -761,7 +771,11 @@ Transparency: the 'opacity' property</h3>
 		tagged-images-002.html
 		tagged-images-003.html
 		tagged-images-004.html
-		/png/cicp-chunk.html
+	</wpt>
+
+	<wpt pathprefix="/png">
+		cicp-chunk.html
+		apng/fDAT-inherits-cICP.html
 	</wpt>
 
 	If the color profile or other identifying information is invalid, the image is treated as [=untagged images=]
@@ -820,6 +834,7 @@ Color Spaces of Untagged Colors</h3>
 <h2 id='color-type'>
 Representing Colors: the <<color>> type</h2>
 
+<wpt title="This section describes a type, it is primarily tested where that type is used."></wpt>	
 
 	Colors in CSS are represented as a list of color components,
 	also sometimes called “channels”,
@@ -906,19 +921,35 @@ Representing Colors: the <<color>> type</h2>
 	but fully transparent--
 	i.e. <nobr>''rgb(0 0 0 / 0%)''</nobr>.
 
+	<wpt>
+		parsing/color-computed-named-color.html
+		parsing/color-computed.html
+		parsing/color-valid.html
+	</wpt>
+
 <h3 id="color-syntax">The <<color>> syntax</h3>
+
+	<wpt title="This section provides definitions used later, it does not need tests."></wpt>
 
 	Colors in CSS are represented by the <dfn export><<color>></dfn> type:
 
 	<pre class='prod'>
-	&lt;color> = <<absolute-color-base>> | currentcolor | <<system-color>> <!-- | <<device-cmyk()>> -->
-
-	<dfn export>&lt;absolute-color-base></dfn> = <<hex-color>> | <<absolute-color-function>> | <<named-color>> | transparent
-	<dfn export>&lt;absolute-color-function></dfn> = <<rgb()>> | <<rgba()>> |
-	                            <<hsl()>> | <<hsla()>> | <<hwb()>> |
-	                            <<lab()>> | <<lch()>> | <<oklab()>> | <<oklch()>> |
-	                            <<color()>>
-	</pre>
+		&lt;color> = <<color-base>> | currentColor | <<system-color>> 
+	
+		<dfn>&lt;color-base></dfn> = <<hex-color>> | <<color-function>> | <<named-color>> | transparent
+		<dfn>&lt;color-function></dfn> = <<rgb()>> | <<rgba()>> |
+									<<hsl()>> | <<hsla()>> | <<hwb()>> |
+									<<lab()>> | <<lch()>> | <<oklab()>> | <<oklch()>> |
+									<<color()>>
+		</pre>
+	
+		An <dfn export>absolute color</dfn>
+		is a <<color>> whose computed value
+		has an absolute, colorimetric interpretation.
+		This means that the value is not:
+	
+		* ''currentColor'' (which depends on the value of the 'color' property)
+		* a <<system-color>> (which depends on the color mode)
 
 	The <<hsl()>>, <<hsla()>>, <<hwb()>>, <<lch()>>, and <<oklch()>> [=color functions=]
 	are [=cylindrical polar color=] representations using a <<hue>> angle;
@@ -980,6 +1011,8 @@ Legacy (Comma-separated) Color Function Syntax</h4>
 <h3 id="alpha-syntax">
 Representing Transparency in Colors: the <<alpha-value>> syntax</h3>
 
+	<wpt title="This section provides definitions used later, it does not need tests."></wpt>
+
 	<pre class="prod">
 	<dfn dfn-for="<color>">&lt;alpha-value></dfn> = <<number>> | <<percentage>>
 	</pre>
@@ -991,6 +1024,8 @@ Representing Transparency in Colors: the <<alpha-value>> syntax</h3>
 
 <h3 id="hue-syntax">
 Representing Cylindrical-coordinate Hues: the <<hue>> syntax</h3>
+
+	<wpt title="This section provides definitions used later, it does not need tests."></wpt>
 
 Hue is represented as an angle of the color circle
 (the rainbow, twisted around into a circle, and with purple added between violet and red).
@@ -1044,6 +1079,24 @@ any achromatic color will have a [=powerless=] hue component.
 
 	This should be done with care, 
 	and only when the particular effect of doing so is desired.
+
+	<wpt>
+		parsing/color-computed-color-function.html
+		parsing/color-computed-hsl.html
+		parsing/color-computed-hwb.html
+		parsing/color-computed-lab.html
+		parsing/color-computed-relative-color.html
+		parsing/color-computed-rgb.html
+		parsing/color-invalid-hsl.html
+		parsing/color-invalid-rgb.html
+		parsing/color-valid-color-function.html
+		parsing/color-valid-color-mix-function.html
+		parsing/color-valid-hsl.html
+		parsing/color-valid-hwb.html
+		parsing/color-valid-lab.html
+		parsing/color-valid-relative-color.html
+		parsing/color-valid-rgb.html
+	</wpt>
 
 	For handling of [=missing component=] in color interpolation,
 	see [[#interpolation-missing]].
@@ -1132,6 +1185,9 @@ any achromatic color will have a [=powerless=] hue component.
 
 <h3 id=parse-color>
 Parsing a <<color>> Value</h3>
+
+<wpt title="This section provides a definition referenced elsewhere, it does not need tests."></wpt>
+
 
 <div algorithm>
 	To <dfn export>parse a CSS <<color>> value</dfn>,
@@ -2115,12 +2171,18 @@ HSL Colors: ''hsl()'' and ''hsla()'' functions</h2>
 	and ''0%'' or ''0'' is a fully-unsaturated gray.
 	For lightness, ''50%'' or ''50'' represents the "normal" color,
 	while ''100%'' or ''100'' is white and ''0%''  or ''0'' is black.
-	<!--  unbounded hsl
-	If the saturation or lightness are less than ''0%''
-	or greater than ''100%'',
-	they are clamped to those values
+	
+	<!-- https://github.com/w3c/csswg-drafts/issues/9222 -->
+	For historical reasons,
+	if the saturation is less than ''0%''
+	it is clamped to ''0%''
 	at parsed-value time,
-	before being converted to an sRGB color. -->
+	before being converted to an sRGB color. 
+
+	<wpt>
+		t424-hsl-clip-outside-gamut-b.xht
+		parsing/color-valid-hsl.html
+	</wpt>
 
 	The final argument specifies the alpha channel of the color.
 	It's interpreted identically to the fourth argument of the ''rgb()'' function.
@@ -2249,7 +2311,10 @@ Converting HSL Colors to sRGB</h3>
 	Here's a sample implementation of the conversion algorithm in JavaScript.
 	It returns an array of three numbers
 	representing the red, green, and blue channels of the colors,
-	normalized to the range [0, 1].
+	which for colors in the sRGB gamut will be in the range [0, 1].
+
+	This code assumes that <em>parse-time</em> clamping
+	of negative saturation has already been applied.
 
 	<pre class="include-code lang-javascript">
 		path: hslToRgb.js
@@ -2261,13 +2326,20 @@ Converting sRGB Colors to HSL</h3>
 
 	Conversion in the reverse direction proceeds similarly.
 
+	Special care is taken to deal with 
+	intermediate negative values of saturation,
+	which can be produced by colors far outside the sRGB gamut.
+
 	<pre class="include-code lang-javascript">
-		path: rgbToHsl.js
+		path: better-rgbToHsl.js
 		highlight: js
 	</pre>
 
 <h3 id='hsl-examples'>
 Examples of HSL Colors</h3>
+
+<em>This section is not normative.</em>
+<wpt title="This section is not normative, it does not need tests."></wpt>
 
 	The tables below illustrate a wide range of possible HSL colors.
 	Each table represents one hue,
@@ -2554,10 +2626,7 @@ Examples of HSL Colors</h3>
 ██     ██ ██  ██  ██ ██     ██
 ██     ██  ███  ███  ████████
 -->
-<!--
-	https://caniuse.com/mdn-css_types_color_hwb
-	https://wpt.fyi/results/css/css-color?label=master&label=experimental&aligned&q=hwb
--->
+
 
 <h2 id='the-hwb-notation'>
 HWB Colors: ''hwb()'' function</h2>
@@ -2636,7 +2705,7 @@ HWB Colors: ''hwb()'' function</h2>
 	Values outside of these ranges
 	are not invalid;
 	hue angles outside the range [0,360) will be normalized to that range
-	and values of white or black greater than 100% will 
+	and values of white and black which sum to 100% or greater will 
 	produce achromatic colors as described below.
 
 	<!-- handling of negative white or black is unspecified 
@@ -2712,6 +2781,9 @@ Converting sRGB Colors to HWB</h3>
 
 <h3 id='hwb-examples'>
 Examples of HWB Colors</h3>
+
+<em>This section is not normative.</em>
+<wpt title="This section is not normative, it does not need tests."></wpt>
 
 	<div class='color-table'>
 		<table>
@@ -2972,6 +3044,8 @@ Device-independent Colors: CIE Lab and LCH, Oklab and Oklch</h2>
 
 	<em>This section is not normative.</em>
 
+	<wpt title="This section is not normative, it does not need tests."></wpt>
+
 	Physical measurements of a color are typically expressed in the CIE L*a*b* [[!CIELAB]] color space,
 	created in 1976 by the <abbr title="Commission Internationale de l'Eclairage">CIE</abbr>
 	and commonly referred to simply as Lab.
@@ -2997,8 +3071,8 @@ Device-independent Colors: CIE Lab and LCH, Oklab and Oklch</h2>
 	the Lab color space is intended to be <em>perceptually uniform</em>.
 
 	<figure id="lightness-vs-luminance">
-		<img src="images/L-axis.svg" width=240 height=575> 
-		<img src="images/Luminance.svg" width=240 height=575>
+		<img src="images/L-axis.svg" width=240 height=575 alt=""> 
+		<img src="images/Luminance.svg" width=240 height=575 alt="">
 		<figcaption>
 			This figure shows, to the left, the Lightness axis of the CIE Lab color space.
 			Twenty-one neutral swatches are shown (L=0%, L=5%, to L=100%).
@@ -3122,6 +3196,7 @@ Device-independent Colors: CIE Lab and LCH, Oklab and Oklch</h2>
 	<h3 id="ok-lab" class="informative">Oklab and Oklch</h3>
 
 	<em>This section is not normative.</em>
+	<wpt title="This section is not normative, it does not need tests."></wpt>
 
 	Recently, Oklab,
 	an improved Lab-like space has been developed [[!Oklab]].
@@ -3371,7 +3446,6 @@ Specifying Lab and LCH: the ''lab()'' and ''lch()'' functional notations</h3>
 <h3 id="specifying-oklab-oklch">
 	Specifying Oklab and Oklch: the ''oklab()'' and ''oklch()'' functional notations</h3>
 
-
 	CSS allows colors to be directly expressed in Oklab and Oklch.
 
 	<pre class='prod'>
@@ -3482,6 +3556,8 @@ Specifying Lab and LCH: the ''lab()'' and ''lch()'' functional notations</h3>
 			oklch-009.html
 			oklch-010.html
 			oklch-011.html
+			oklch-l-over-1-1.html
+			oklch-l-over-1-2.html
 			parsing/color-valid.html
 		</wpt>
 
@@ -3805,12 +3881,13 @@ The Predefined sRGB Color Space: the ''sRGB'' keyword</h3>
 				<figcaption>Visualization of the sRGB color space in LCH. The primaries and secondaries are shown.</figcaption>
 			</figure>
 
-			<wpt>
-				predefined-001.html
-				predefined-002.html
-				parsing/color-valid.html
-			</wpt>
 		</dl>
+
+		<wpt>
+			predefined-001.html
+			predefined-002.html
+			parsing/color-valid.html
+		</wpt>
 
 <h3 id="predefined-sRGB-linear">
 The Predefined Linear-light sRGB Color Space: the ''srgb-linear'' keyword</h3>
@@ -3857,14 +3934,6 @@ The Predefined Linear-light sRGB Color Space: the ''srgb-linear'' keyword</h3>
 				c is the red, green or blue component.
 				cl is the corresponding linear-light component, which is identical.
 
-				<wpt>
-					srgb-linear-001.html
-					srgb-linear-002.html
-					srgb-linear-003.html
-					srgb-linear-004.html
-					parsing/color-valid.html
-					
-				</wpt>
 
 				To avoid banding artifacts, a
 				<a href="#predefined-precision-table">higher precision is required</a>
@@ -3879,6 +3948,14 @@ The Predefined Linear-light sRGB Color Space: the ''srgb-linear'' keyword</h3>
 				</div>
 			</dd>
 		</dl>
+		<wpt>
+			srgb-linear-001.html
+			srgb-linear-002.html
+			srgb-linear-003.html
+			srgb-linear-004.html
+			parsing/color-valid.html
+			
+		</wpt>
 
 <h3 id="predefined-display-p3">
 The Predefined Display P3 Color Space: the ''display-p3'' keyword</h3>
@@ -3930,19 +4007,19 @@ The Predefined Display P3 Color Space: the ''display-p3'' keyword</h3>
 				</figcaption>
 			</figure>
 
-			<wpt>
-				
-				predefined-005.html
-				predefined-006.html
-				display-p3-001.html
-				display-p3-002.html
-				display-p3-003.html
-				display-p3-004.html
-				display-p3-005.html
-				display-p3-006.html
-			</wpt>
-
 		</dl>
+
+		<wpt>
+			predefined-005.html
+			predefined-006.html
+			display-p3-001.html
+			display-p3-002.html
+			display-p3-003.html
+			display-p3-004.html
+			display-p3-005.html
+			display-p3-006.html
+		</wpt>
+
 
 <h3 id="predefined-a98-rgb">
 The Predefined A98 RGB Color Space: the ''a98-rgb'' keyword</h3>
@@ -3991,16 +4068,16 @@ The Predefined A98 RGB Color Space: the ''a98-rgb'' keyword</h3>
 				</figcaption>
 			</figure>
 
-			<wpt>
-				predefined-007.html
-				predefined-008.html
-				a98rgb-001.html
-				a98rgb-002.html
-				a98rgb-003.html
-				a98rgb-004.html
-				parsing/color-valid.html
-			</wpt>
 		</dl>
+		<wpt>
+			predefined-007.html
+			predefined-008.html
+			a98rgb-001.html
+			a98rgb-002.html
+			a98rgb-003.html
+			a98rgb-004.html
+			parsing/color-valid.html
+		</wpt>
 
 <h3 id="predefined-prophoto-rgb">
 The Predefined ProPhoto RGB Color Space: the ''prophoto-rgb'' keyword</h3>
@@ -4086,18 +4163,19 @@ The Predefined ProPhoto RGB Color Space: the ''prophoto-rgb'' keyword</h3>
 					</figcaption>
 				</figure>
 
-				<wpt>
-					predefined-009.html
-					predefined-010.html
-					prophoto-rgb-001.html
-					prophoto-rgb-002.html
-					prophoto-rgb-003.html
-					prophoto-rgb-004.html
-					prophoto-rgb-005.html
-					parsing/color-valid.html
-					
-				</wpt>
+				
 		</dl>
+		<wpt>
+			predefined-009.html
+			predefined-010.html
+			prophoto-rgb-001.html
+			prophoto-rgb-002.html
+			prophoto-rgb-003.html
+			prophoto-rgb-004.html
+			prophoto-rgb-005.html
+			parsing/color-valid.html
+			
+		</wpt>
 
 <h3 id="predefined-rec2020">
 The Predefined ITU-R BT.2020-2 Color Space: the ''rec2020'' keyword</h3>
@@ -4167,17 +4245,17 @@ The Predefined ITU-R BT.2020-2 Color Space: the ''rec2020'' keyword</h3>
 				</figcaption>
 			</figure>
 
-			<wpt>
-				predefined-011.html
-				predefined-012.html
-				rec2020-001.html
-				rec2020-002.html
-				rec2020-003.html
-				rec2020-004.html
-				rec2020-005.html
-				parsing/color-valid.html
-			</wpt>
 		</dl>
+		<wpt>
+			predefined-011.html
+			predefined-012.html
+			rec2020-001.html
+			rec2020-002.html
+			rec2020-003.html
+			rec2020-004.html
+			rec2020-005.html
+			parsing/color-valid.html
+		</wpt>
 
 <h3 id="predefined-xyz">
 The Predefined CIE XYZ Color Spaces: the ''xyz-d50'', ''xyz-d65'', and ''xyz'' keywords</h3>
@@ -4224,27 +4302,26 @@ The Predefined CIE XYZ Color Spaces: the ''xyz-d50'', ''xyz-d65'', and ''xyz'' k
 					</pre>
 				</div>
 
-				<wpt>
-					predefined-016.html
-					xyz-001.html
-					xyz-002.html
-					xyz-003.html
-					xyz-004.html
-					xyz-005.html
-					xyz-d50-001.html
-					xyz-d50-002.html
-					xyz-d50-003.html
-					xyz-d50-004.html
-					xyz-d50-005.html
-					xyz-d65-001.html
-					xyz-d65-002.html
-					xyz-d65-003.html
-					xyz-d65-004.html
-					xyz-d65-005.html
-					parsing/color-valid.html
-					
-				</wpt>
 	</dl>
+	<wpt>
+		predefined-016.html
+		xyz-001.html
+		xyz-002.html
+		xyz-003.html
+		xyz-004.html
+		xyz-005.html
+		xyz-d50-001.html
+		xyz-d50-002.html
+		xyz-d50-003.html
+		xyz-d50-004.html
+		xyz-d50-005.html
+		xyz-d65-001.html
+		xyz-d65-002.html
+		xyz-d65-003.html
+		xyz-d65-004.html
+		xyz-d65-005.html
+		parsing/color-valid.html
+	</wpt>
 
 
 <h3 id="predefined-to-lab-oklab">
@@ -4383,6 +4460,8 @@ Simple Alpha Compositing</h3>
 <h2 id="color-conversion" algorithm="to convert a color">
 Converting Colors</h2>
 
+<wpt title="This section provides an algorithm used later, it does not need tests."></wpt>
+
 Colors may be converted
 from one color space to another and,
 provided that there is no gamut mapping
@@ -4464,8 +4543,11 @@ Color Interpolation</h2>
 	
 	<ol>
 		<li>checking the two colors for [=analogous components=] which will be carried forward</li>
-		<li>(if required) converting them to a given color space
-			which will be referred to as the <dfn export>interpolation color space</dfn> below</li>
+		<li>converting them to a given color space
+			which will be referred to as the <dfn export>interpolation color space</dfn> below. 
+			If one or both colors are already in the interpolation colorspace,
+			this conversion changes any [=powerless=] components to [=missing=] values
+		</li>
 		<li>(if required) re-inserting carried-forward values in the converted colors</li>
 		<li>(if required) fixing up the hues, depending on the selected <<hue-interpolation-method>></li>
 		<li>changing the color components to premultiplied form</li>
@@ -4565,6 +4647,22 @@ Color Space for Interpolation</h3>
 	</wpt>
 
 	<wpt pathprefix="css/css-images/">
+		gradients-with-transparent.html
+		gradient/gradient-eval-001.html
+		gradient/gradient-eval-002.html
+		gradient/gradient-eval-003.html
+		gradient/gradient-eval-004.html
+		gradient/gradient-eval-005.html
+		gradient/gradient-eval-006.html
+		gradient/gradient-eval-007.html
+		gradient/gradient-eval-008.html
+		gradient/gradient-eval-009.html
+		gradient/gradient-none-interpolation.html
+		gradient/legacy-color-gradient.html
+		gradient/oklab-gradient.html
+		gradient/srgb-gradient.html
+		gradient/srgb-linear-gradient.html
+		gradient/xyz-gradient.html
 		parsing/gradient-interpolation-method-valid.html
 		parsing/gradient-interpolation-method-invalid.html
 		parsing/gradient-interpolation-method-computed.html
@@ -4628,6 +4726,7 @@ Interpolating with Missing Components</h3>
 	If any [=analogous components=] which are [=missing components=] are found,
 	they will be <strong>carried forward</strong>
 	and re-inserted in the converted color
+	before premultiplication, and
 	before linear interpolation takes place.
 
 	The <dfn export>analogous components</dfn>  are as follows:
@@ -4933,14 +5032,6 @@ Hue Interpolation</h3>
 	Specifying a hue interpolation strategy is already part of the <<color-interpolation-method>> syntax
 	via the <<hue-interpolation-method>> token.
 
-	Both angles and their difference need to be constrained to [0, 360) prior to interpolation.
-	To do this, the minimum number of turns that fit in the lesser angle
-	is added or subtracted from both angles,
-	bringing the lesser angle into the range [0,360);
-	and if the difference between them is greater than or equal to 360&deg;
-	then the minimum number of turns to bring the difference into the range [0,360)
-	is further subtracted from the greater angle.
-
 	Unless otherwise specified, if no specific hue interpolation algorithm is selected by the host syntax, the default is ''shorter''.
 
 	<wpt>
@@ -4960,9 +5051,9 @@ Hue Interpolation</h3>
 
 	<div class="example" id="ex-shorter">
 		For example, the midpoint when interpolating in Oklch from a red
-		<span class="swatch" style="--color: rgb(93.22% 7.98% 0.485%)"></span>&nbsp;oklch(0.6 0.24 30) to a yellow 
+		<span class="swatch" style="--color: rgb(93.22% 7.98% 0.485%)"></span>&nbsp;oklch(0.6 0.24 30) to a yellow
 		<span class="swatch" style="--color: rgb(89.07% 72.28% 19.23%)"></span>&nbsp;oklch(0.8 0.15 90)
-		would be at a hue angle of (30 + 90) / 2 = 60 degrees, 
+		would be at a hue angle of 30 + (90 - 30) * 0.5 = 60 degrees,
 		along the shorter arc between the two colors,
 		giving a deep orange
 		<span class="swatch" style="--color: rgb(87.66% 51.96% 0%)"></span>&nbsp;oklch(0.7 0.195 60)
@@ -4981,14 +5072,14 @@ Hue Interpolation</h3>
 <h4 id="hue-longer">
 <dfn export>longer</dfn></h4>
 
-	Hue angles are interpolated to take the <em>longer</em> of the two arcs 
+	Hue angles are interpolated to take the <em>longer</em> of the two arcs
 	between the starting and ending hues.
 
 	<div class="example" id="ex-longer">
 		For example, the midpoint when interpolating in Oklch from a red
 		<span class="swatch" style="--color: rgb(93.22% 7.98% 0.485%)"></span>&nbsp;oklch(0.6 0.24 30) to a yellow 
 		<span class="swatch" style="--color: rgb(89.07% 72.28% 19.23%)"></span>&nbsp;oklch(0.8 0.15 90)
-		would be at a hue angle of (30 + 360 + 90) * 0.5 = 240 degrees, 
+		would be at a hue angle of (30 + 360 + 90) * 0.5 = 240 degrees,
 		along the longer arc between the two colors,
 		giving a sky blue
 		<span class="swatch" style="--color: rgb(0% 66.25% 100%)"></span>&nbsp;oklch(0.7 0.195 240)
@@ -5023,11 +5114,11 @@ Hue Interpolation</h3>
 		For example, the midpoint when interpolating in Oklch from a deep brown
 		<span class="swatch" style="--color: rgb(57.92% 29.44% 25.11%)"></span>&nbsp;oklch(0.5 0.1 30) to a turquoise 
 		<span class="swatch" style="--color: rgb(26.29% 69.89% 67.49%)"></span>&nbsp;oklch(0.7 0.1 190)
-		would be at a hue angle of (30 + 190) * 0.5 = 110 degrees, 
+		would be at a hue angle of (30 + 190) * 0.5 = 110 degrees,
 		giving a khaki
 		<span class="swatch" style="--color: rgb(51.73% 52.26% 22.03%)"></span>&nbsp;oklch(0.6 0.1 110).
 
-		However, if the hue of the second color is animated to 
+		However, if the hue of the second color is animated to
 		<span class="swatch" style="--color: rgb(33.09% 66.63% 81.81%)"></span>&nbsp;oklch(0.7 0.1 230),
 		the midpoint of the interpolation will be (30 + 230) * 0.5 = 130 degrees,
 		continuing in the same increasing direction, 
@@ -5046,34 +5137,34 @@ Hue Interpolation</h3>
 <h4 id="hue-decreasing">
 <dfn export>decreasing</dfn></h4>
 
-	Hue angles are interpolated so that, 
+	Hue angles are interpolated so that,
 	as they progress from the first color to the second, 
 	the angle is always <em>decreasing</em>.
 	If the angle decreases to 0 it is reset to 360,
 	and then continues decreasing.
 
-	Depending on the difference between the two angles, 
+	Depending on the difference between the two angles,
 	this will either look the same as <em>shorter</em> or as <em>longer.</em>
 	However, if one of the hue angles is being animated,
 	and the hue angle difference passes through 180 degrees,
 	the interpolation will not flip to the other arc.
 
-<div class="example" id="ex-decreasing">
-	For example, the midpoint when interpolating in Oklch from a deep brown
-	<span class="swatch" style="--color: rgb(57.92% 29.44% 25.11%)"></span>&nbsp;oklch(0.5 0.1 30) to a turquoise 
-	<span class="swatch" style="--color: rgb(26.29% 69.89% 67.49%)"></span>&nbsp;oklch(0.7 0.1 190)
-	would be at a hue angle of (30 + 360 + 190) * 0.5 = 290 degrees, 
-	giving a purple
-	<span class="swatch" style="--color: rgb(49.98% 46.03% 72.08%)"></span>&nbsp;oklch(0.6 0.1 290).
+	<div class="example" id="ex-decreasing">
+		For example, the midpoint when interpolating in Oklch from a deep brown
+		<span class="swatch" style="--color: rgb(57.92% 29.44% 25.11%)"></span>&nbsp;oklch(0.5 0.1 30) to a turquoise
+		<span class="swatch" style="--color: rgb(26.29% 69.89% 67.49%)"></span>&nbsp;oklch(0.7 0.1 190)
+		would be at a hue angle of (30 + 360 + 190) * 0.5 = 290 degrees,
+		giving a purple
+		<span class="swatch" style="--color: rgb(49.98% 46.03% 72.08%)"></span>&nbsp;oklch(0.6 0.1 290).
 
-	However, if the hue of the second color is animated to 
-	<span class="swatch" style="--color: rgb(33.09% 66.63% 81.81%)"></span>&nbsp;oklch(0.7 0.1 230),
-	the midpoint of the interpolation will be (30 +360 + 230) * 0.5 = 310 degrees,
-	continuing in the same decreasing direction, 
-	giving another purple
-	<span class="swatch" style="--color: rgb(57.47% 43.44% 67.8%)"></span>&nbsp;oklch(0.6 0.1 310)
-	rather than flipping to the opponent color part-way through the animation.
-</div>
+		However, if the hue of the second color is animated to
+		<span class="swatch" style="--color: rgb(33.09% 66.63% 81.81%)"></span>&nbsp;oklch(0.7 0.1 230),
+		the midpoint of the interpolation will be (30 + 360 + 230) * 0.5 = 310 degrees,
+		continuing in the same decreasing direction,
+		giving another purple
+		<span class="swatch" style="--color: rgb(57.47% 43.44% 67.8%)"></span>&nbsp;oklch(0.6 0.1 310)
+		rather than flipping to the opponent color part-way through the animation.
+	</div>
 
 	Angles are adjusted so that |θ₂ - θ₁| ∈ (-360, 0]. In pseudo-Javascript:
 		<pre>
@@ -5103,6 +5194,9 @@ An Introduction to Gamut Mapping</h3>
 Note: This section provides important context for the specific requirements described elsewhere in the document.
 
 <p><i>This section is non-normative</i></p>
+
+<wpt title="This section is not normative, it does not need tests."></wpt>
+
 
 	When a color in an origin color space
 	is converted to another, destination color space
@@ -5220,7 +5314,7 @@ Chroma Reduction</h4>
 
 	A practical implementation will converge more quickly than a linear reduction;
 	either by binary search,
-	or by computing an analytical intersection
+	or by computing the geometric intersection
 	of the line of constant hue and lightness with the gamut boundary.
 
 <h4 id="GM-excessive-reduction">
@@ -5381,6 +5475,8 @@ Deviations from Perceptual Uniformity: Hue Curvature</h4>
 <h3 id="css-gamut-mapping" algorithm="to CSS gamut map">
 CSS Gamut Mapping to an RGB Destination</h3>
 
+<wpt title="Used values of color are not exposed to script, making this hard to test in an automated manner."></wpt>
+
 	The <dfn export>CSS gamut mapping algorithm</dfn>
 	applies to individual,
 	Standard Dynamic Range (SDR) CSS colors
@@ -5416,7 +5512,7 @@ CSS Gamut Mapping to an RGB Destination</h3>
 
 	CSS gamut mapping occurs in the <a href="#ok-lab">Oklch color space</a>,
 	and the color difference formula used is <a href="#color-difference-OK">deltaEOK</a>.
-	The local-MINDE improvement is used.
+	The <a href="#GM-chroma-local-MINDE">local-MINDE</a> improvement is used.
 
 	For colors which are out of range on the Lightness axis,
 	white is returned in the destination color space
@@ -5434,7 +5530,7 @@ CSS Gamut Mapping to an RGB Destination</h3>
 	the clipped version of the color is returned as the mapped result.
 
 
-	For the analytical implementation,
+	For the geometric implementation,
 	having found the exact intersection,
 	project outwards (towards higher chroma) along the line of constant lightness
 	until either:
@@ -5450,67 +5546,93 @@ CSS Gamut Mapping to an RGB Destination</h3>
 	For the Oklch color space,
 	one JND is is an Oklch difference of 0.02.
 
+	Note: In CIE Lab color space,
+	where the range of the Lightness component is 0 to 100,
+	using deltaE2000,
+	one JND is 2.
+	Because the range of Lightness in Oklab and Oklch
+	is 0 to 1,
+	using deltaEOK,
+	one JND is 100 times smaller.
+
+
 <h4 id="binsearch">
 Sample Pseudocode for the Binary Search Gamut Mapping Algorithm with Local MINDE</h4>
 
-	<div algorithm="to CSS gamut map a color">
-		To <dfn export>CSS gamut map</dfn> a color |origin|
-		in color space |origin color space|
-		to be in gamut of a destination color space |destination|:
+<div algorithm="to CSS gamut map a color">
+	To <dfn export>CSS gamut map</dfn> a color |origin|
+	in color space |origin color space|
+	to be in gamut of a destination color space |destination|:
 
+<ol>
+	<!-- check if we need gamut mapping at all -->
+	<li>if |destination| has no gamut limits (XYZ-D65, XYZ-D50, Lab, LCH, Oklab, Oklch) convert |origin| to |destination| and return it as the gamut mapped color
+	<!-- we do, so convert to Oklch -->
+		<li>let |origin_Oklch| be |origin| converted
+		from |origin color space| to the Oklch color space</li>
+	<!-- constrain to SDR lightness range, which gamut maps to black or white -->
+	<li>if the Lightness of |origin_Oklch| is greater than or equal to 100%,
+		convert `oklab(1 0 0 / origin.alpha)` to |destination| and return it as the gamut mapped color</li>
+	<li>if the Lightness of |origin_Oklch| is less than than or equal to 0%,
+		convert `oklab(0 0 0 / origin.alpha)` to |destination| and return it as the gamut mapped color</li>
+	<li>let inGamut(|color|) be a function which returns true if, when passed a color,
+		that color is inside the gamut of |destination|.
+		For HSL and HWB, it returns true if the color is inside the gamut of sRGB.
+	</li>
+	<!-- are we already in gamut? -->
+	<li>if inGamut(|origin_Oklch|) is true, convert |origin_Oklch| to |destination| and return it as the gamut mapped color</li>
+	<!-- now start to gamut map -->
+	<li>otherwise, let delta(|one|, |two|) be a function which returns the deltaEOK of color |one| compared to color |two|</li>
+	<li>let |JND| be 0.02</li>
+	<li>let |epsilon| be 0.0001</li>
+	<!-- we already excluded spaces with no gamut limits in the first step, so this is fine -->
+	<li>let clip(|color|) be a function which converts |color| to |destination|,
+		clamps each component to the bounds of the reference range for that component
+		and returns the result</li>
+
+	<!-- is clipped already indistinguishable from origin, and in gamut? -->
+	<li>set |current| to |origin_Oklch|</li>
+	<li>set |clipped| to clip(|current|)</li>
+	<li>set |E| to delta(|clipped|, |current|)</li>
+	<li>if |E| < |JND|
 		<ol>
-			<li>if |destination| has no gamut limits (XYZ-D65, XYZ-D50, Lab, LCH, Oklab, Oklch) return |origin|
-			<li>let |origin_Oklch| be |origin| converted
-				from |origin color space| to the Oklch color space</li>
-			<li>if the Lightness of |origin_Oklch| is greater than or equal to 100%,
-				return { 1 1 1 origin.alpha } in |destination|</li>
-			<li>if the Lightness of |origin_Oklch| is less than than or equal to 0%,
-					return { 0 0 0 origin.alpha } in |destination|</li>
-			<li>let inGamut(|color|) be a function which returns true if, when passed a color,
-				that color is inside the gamut of |destination|.
-				For HSL and HWB, it returns true if the color is inside the gamut of sRGB.
-			</li>
-			<li>if inGamut(|origin_Oklch|) is true, convert |origin_Oklch| to |destination| and return it as the gamut mapped color</li>
-			<li>otherwise, let delta(|one|, |two|) be a function which returns the deltaEOK of color |one| compared to color |two|</li>
-			<li>let |JND| be 0.02</li>
-			<li>let |epsilon| be 0.0001</li>
-			<!-- we already excluded spaces with no gamut limits in the first step, so this is fine -->
-			<li>let clip(|color|)| be a function which converts |color| to |destination|,
-				converts all negative components to zero,
-				converts all components greater that one to one,
-				and returns the result
-			</li>
-			<li>set |min| to zero</li>
-			<li>set |max| to the Oklch chroma of |origin_Oklch|</li>
-			<li> let |min_inGamut| be a boolean that represents when |min| is still in gamut, and set it to true
-			<li>while (|max| - |min| is greater than |epsilon|) repeat the following steps
-				<ol>
-					<li>set |chroma| to (|min| + |max|) /2</li>
-					<li>set |current| to |origin_Oklch| and then set the chroma component to |chroma|</li>
-					<li>if |min_inGamut| is true and also if inGamut(|current|) is true, set |min| to |chroma| and continue to repeat these steps</li>
-					<li>otherwise, if inGamut(|current|) is false carry out these steps:
-						<ol>
-							<li>set |clipped| to clip(|current|)</li>
-							<li>set |E| to delta(|clipped|, |current|)</li>
-							<li>if |E| < |JND|
-								return |clipped| as the gamut mapped color
-							<!-- <ol>
-								<li>if (|JND| - |E| < |epsilon|) return |clipped| as the gamut mapped color</li>
-								<li>otherwise,
-								<ol>
-									<li>set |min_inGamut| to false</li>
-									<li>set |min| to |chroma|</li>
-								</ol>
-								</li>
-							</ol> -->
-							</li>
-							<li>otherwise, set |max| to |chroma| and continue to repeat these steps</li>
-						</ol>
-					</li>
-				</ol>
-			</li>
 			<li>return |clipped| as the gamut mapped color</li>
 		</ol>
+	</li>
+
+	<!-- reduce chroma -->
+	<li>set |min| to zero</li>
+	<li>set |max| to the Oklch chroma of |origin_Oklch|</li>
+	<li> let |min_inGamut| be a boolean that represents when |min| is still in gamut, and set it to true
+	<li>while (|max| - |min| is greater than |epsilon|) repeat the following steps
+		<ol>
+			<li>set |chroma| to (|min| + |max|) /2</li>
+			<li>set the chroma component of |current| to |chroma|</li>
+			<li>if |min_inGamut| is true and also if inGamut(|current|) is true, set |min| to |chroma| and continue to repeat these steps</li>
+			<li>otherwise, if inGamut(|current|) is false carry out these steps:
+				<ol>
+					<li>set |clipped| to clip(|current|)</li>
+					<li>set |E| to delta(|clipped|, |current|)</li>
+					<li>if |E| < |JND|
+					<ol>
+						<li>if (|JND| - |E| < |epsilon|) return |clipped| as the gamut mapped color</li>
+						<li>otherwise,
+						<ol>
+							<li>set |min_inGamut| to false</li>
+							<li>set |min| to |chroma|</li>
+						</ol>
+						</li>
+					</ol>
+					</li>
+					<li>otherwise, set |max| to |chroma| and continue to repeat these steps</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+	<li>return |clipped| as the gamut mapped color</li>
+</ol>
+
+</div>
 
 	<!-- unbounded hsl
 	<wpt ignore>
@@ -5577,7 +5699,7 @@ Resolving sRGB values</h3>
 	The computed and used value
 	is the corresponding sRGB color,
 	paired with the specified alpha channel
-	(after clamping to [0.0, 1.0])
+	(after clamping to [0, 1])
 	and defaulting to opaque if unspecified).
 
 	<div class="example" id="ex-named-case">
@@ -5608,7 +5730,7 @@ Resolving sRGB values</h3>
 	Otherwise, the specified, computed and used value
 	is the corresponding sRGB color,
 	paired with the specified alpha channel
-	(after clamping to [0.0, 1.0])
+	(after clamping to [0, 1])
 	and defaulting to opaque if unspecified).
 
 	For historical reasons, when ''calc()'' in sRGB colors 
@@ -5865,7 +5987,7 @@ and there shall be no thousands separator.
 
 For syntactic forms which support [=missing color components=],
 the value ''none'' (equivalently NONE, nOnE, etc),
-shall be serialized in all-lower case
+shall be serialized in all-lowercase
 as the string "none".
 
 
@@ -5875,14 +5997,54 @@ Serializing alpha values</h3>
 	This applies to any <<color>> value which can take an optional alpha value.
 	It does not apply to the ''opacity'' property.
 
-	If, after clamping to the range [0.0, 1.0] the alpha is exactly 1,
+	If, after clamping to the range [0, 1] the alpha is 1,
 	it is omitted from the serialization;
 	an implicit value of 1 (fully opaque) is the default.
 
 	If the alpha is any other value than 1,
-	it is explicitly included in the serialization,
-	as a <<number>>, not a <<percentage>>.
-	The value is expressed in base ten,
+	it is explicitly included in the serialization as described below.
+	
+	If the value is internally represented as an integer 
+	between 0 and 255 inclusive (i.e. 8-bit unsigned integer),
+	follow these steps:
+
+	<ol>
+		<li>Let <var>alpha</var> be the given integer.
+		<li>If there exists an integer between 0 and 100 inclusive that,
+		when multiplied with 2.55 and rounded to the closest integer 
+		(rounding up if two values are equally close), equals <var>alpha</var>,
+		let <var>rounded</var> be that integer divided by 100.
+		<li>Otherwise, let <var>rounded</var> be <var>alpha</var> 
+		divided by 0.255 and rounded to the closest integer 
+		(rounding up if two values are equally close),
+		divided by 1000.
+		<li>Return the result of serializing <var>rounded</var> 
+		as a <<number>>.
+	</ol>
+
+	Otherwise, return the result of serializing the given value 
+	(as a <<number>>, not a <<percentage>>).
+
+	<div class="example" id="ex-alpha-255">
+		<p>
+			For example, 
+			if the alpha is stored as the 8-bit unsigned integer 237,
+			the integer 93 satisfies the criterion
+			because Math.round(93 * 2.55) is 237,
+			and so the alpha is serialized as "0.93".
+		</p>
+		<p>
+			However, 
+			if the alpha is stored as the 8-bit unsigned integer 236,
+			there is no such integer
+			(92 maps to 235 while 94 maps to 240),
+			and so since 236 ÷ 0.255 = 925.490196078
+			the alpha is serialized as "0.92549"
+			(no more than 6 figures, trailing zeroes omitted).
+		</p>
+	</div>
+
+	The <<number>> value is expressed in base ten,
 	with the "." character as decimal separator.
 	The leading zero must not be omitted.
 	Trailing zeroes must be omitted.
@@ -6430,6 +6592,8 @@ Default Style Rules</h2>
 Sample code for Color Conversions</h2>
 
 <em>This section is not normative.</em>
+<wpt title="This section is not normative, it does not need tests."></wpt>
+
 
 For clarity, <a href="multiply-matrices.js">a library</a> is used for matrix multiplication.
 (This is more readable than inlining all the multiplies and adds).
@@ -6454,6 +6618,8 @@ highlight: js
 Sample Code for ΔE2000 and ΔEOK Color Differences</h2>
 
 <em>This section is not normative.</em>
+<wpt title="This section is not normative, it does not need tests."></wpt>
+
 
 <h3 id="color-difference-2000">ΔE2000</h3>
 <p>
@@ -6474,7 +6640,7 @@ Sample Code for ΔE2000 and ΔEOK Color Differences</h2>
 
 <p>
 	The sample code below has been
-	<a href="https://colorjs.io/tests/delta.html#deltae-2000">validated</a>
+	<a href="https://colorjs.io/test/?test=delta">validated</a>
 	to five significant figures
 	against the test suite of paired Lab values and expected ΔE2000
 	published by [[Sharma]] and is correct.
@@ -6536,7 +6702,7 @@ Appendix A: Deprecated CSS System Colors</h2>
 		<dd>Active window border. Same as ''ButtonBorder''.
 
 		<dt><dfn>ActiveCaption</dfn>
-		<dd>Active window caption. Same as ''CanvasText''.
+		<dd>Active window caption. Same as ''Canvas''.
 
 		<dt><dfn>AppWorkspace</dfn>
 		<dd>Background color of multiple document interface. Same as ''Canvas''.
@@ -6745,6 +6911,7 @@ composited-filters-under-opacity.html
 light-dark-basic.html
 light-dark-currentcolor.html
 light-dark-inheritance.html
+light-dark-currentcolor-in-color.html
 t31-color-currentColor-b.xht
 t31-color-text-a.xht
 t41-html4-keywords-a.xht
@@ -6850,11 +7017,48 @@ parsing/relative-color-out-of-gamut.html
 <h2 id='changes' class='no-num'>
 Changes</h2>
 
+<h3 id="changes-from-20240213">Changes since the <a href="https://www.w3.org/TR/2024/CRD-css-color-4-20240213/">Candidate Recommendation Draft of 13 Feb 2024</a></h3>
+
+<ul>
+	<li><i>none</i></li>
+</ul>
+
 <h3 id="changes-from-20221101">Changes since the
-	<a href="https://www.w3.org/TR/2022/CR-css-color-4-20221101/">Candidate Recommendation Draft of 1 November 2022</a>
+	<a href="https://www.w3.org/TR/2022/CRD-css-color-4-20221101/">Candidate Recommendation Draft of 1 November 2022</a>
 </h3>
 
 <ul>
+	<!-- to 7 Feb 2024 -->
+	<li>Added steps for serializing a uint8_t alpha, moved from cssom-1</li>
+	<li>Restored parse-time clamping of HSL negative saturation to 0, which is current interop behavior from CSS Color 3</li>
+	<li>When interpolating, always convert colorspace, so that powerless components become missing</li>
+	<li>Clarified when alpha 1 is omitted from serialization</li>
+	<li>Removed redundant constraining of hue angles to [0,360] as this is already done.</li>
+	<li>Corrected description of ActiveCaption, which is a background. </li>
+	<li>Disambiguated opacity and alpha. Opacity property now uses opacity-value (which has different clamping behavior to alpha-value)</li>
+	<li>Clarified that carrying forward happens before premultiplication</li>
+	<li>Updated gamut mapping algorithm</li>
+	<li>Fixed a few issues regarding hue interpolation </li>
+	<li>Clarified that HWB white or black at 100% is insufficient criterion for an achromatic color; it is the sum which matters.</li>
+	<!-- to 16 Dec 2023 -->
+	<li>Avoid returning negative saturation in rgb to hsl conversion; adjust the hue to point to "the other side" instead</li>
+	<li>Use 64 bit accurate matrices for ProPhoto, which does not have a rational form</li>
+	<li>Oklab matrices recalculated for 64bit precision (returns same results as before, at 32 bit precision)</li>
+	<li>Consistently return output of GMA in the destination color space, even if no mapping is performed because the destination is unbounded</li>
+	<li>Added explanation for why one JND for Oklab is 0.02, not 2 </li>
+	<li>Clarified that resolving sRGB values does not apply to the color() function</li>
+	<li>Moved alpha value definition up to the opacity property, clarified that opacity specified values are not clamped.</li>
+	<li>System Colors now explicitly permit spoofing, to preserve privacy</li>
+	<li>Corrected the inverse chromatic adaptation matrix for D50 to D65 </li>
+	<li>Consistently distinguish linear Bradfrod from the original, more complicated, Bradford chromatic adaptation algorithm</li>
+	<li>In the gamut mapping algorithm, return clipped as the gamut mapped result, avoiding un-necessary steps</li>
+	<li>Updated chromatic adaptation matrices to higher precision</li>
+	<li>Added Add 'parse a css color' algorithm, so non-CSS specs using colors don't have to reinvent the machinery here.</li>
+	<li>Clarified that geometric gamut mapping must not project chroma back beyond the original color</li>
+	<li>Use the term "geometric" rather than "analytical" in gamut mapping discussion</li>
+	<li>Aligned prose for HSL into line with the grammar (percent and number both allowed)</li>
+	<li>Fixed an LCH alpha interpolation example, which was erroneously un-premultiplying the hue angle</li>
+	<li>Corrected the sRGB and display-p3 transfer function. (This only affected the result if a component had the exact value 10.31475 / 255, which is not possible at 8 or 10 bits per component)</li>
 	<!-- to 26 Oct 2023 -->
 	<li>Clarified that the specified values of system colors are still themselves</li>
 	<li>Added mention of PNG cICP chunk for tagging images</li>

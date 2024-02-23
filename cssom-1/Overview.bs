@@ -71,6 +71,9 @@ urlPrefix: https://html.spec.whatwg.org/multipage/
     urlPrefix: semantics.html
         type: dfn
             text: a style sheet that is blocking scripts
+            text: contributes a script-blocking style sheet
+            for: Document
+                text: script-blocking style sheet set
 urlPrefix: https://dom.spec.whatwg.org/#concept-
     type: dfn
         text: dispatch; url: event-dispatch
@@ -1154,9 +1157,14 @@ steps:
 
 <ol>
  <li>Add the <a>CSS style sheet</a> to the list of
- <a>document or shadow root CSS style sheets</a> at the appropriate location. The
- remainder of these steps deal with the
- <a>disabled flag</a>.
+ <a>document or shadow root CSS style sheets</a> at the appropriate location.
+
+ <li>
+  <p>If the <a>CSS style sheet</a>'s <a for=CSSStyleSheet>owner node</a> <a>contributes a
+ script-blocking style sheet</a>, then user agents must <a for=list>append</a> the <a
+ for=CSSStyleSheet>owner node</a> to its <a>node document</a>'s <a for=Document>script-blocking
+ style sheet set</a>.</p>
+ <p class="note">The remainder of these steps deal with the <a>disabled flag</a>.</p>
 
  <li>If the <a>disabled flag</a> is set, then return.
 
@@ -1541,15 +1549,6 @@ must be run:
    </ol>
  </ol>
 </div>
-
-A style sheet referenced by an <a>xml-stylesheet processing instruction</a> using the rules in this section, in the context of
-the {{Document}} of an <a>XML parser</a> is said to be
-<a>a style sheet that is blocking scripts</a> if the <code>ProcessingInstruction</code>
-<a>node</a> was created by that {{Document}}'s parser, and the style sheet was
-enabled when the node was created by the parser, the last time the
-<a>event loop</a> reached step 1, the node was in that Document,
-and the user agent hasn't given up on loading that particular style sheet
-yet. A user agent may give up on such a style sheet at any time.
 
 ### Requirements on user agents Implementing the HTTP Link Header ### {#requirements-on-user-agents-implementing-the-http-link-header}
 
@@ -2846,30 +2845,14 @@ depends on the component, as follows:
 
 
  If <<color>> is a component of a specified value, then
- return the color as follows:
- <ol>
- <li>If the color was explicitly specified by the author, then return the original, author specified color value.
- <li>Otherwise, return the value that would be returned if the color were a component of a computed value.
- </ol>
-
- Issue: Should author specified values be normalized for case, the same as computed values? Or should original case be preserved?
+for sRGB values, see
+[[css-color-4#resolving-sRGB-values]].
+For other color functions, see 
+[[css-color-4#resolving-color-values]].
 
  <dt><<alpha-value>>
  <dd>
-  If the value is internally represented as an integer between 0 and 255 inclusive (i.e. 8-bit unsigned integer),
-  follow these steps:
-
-  <ol>
-   <li>Let <var>alpha</var> be the given integer.
-   <li>If there exists an integer between 0 and 100 inclusive that,
-   when multiplied with 2.55 and rounded to the closest integer (rounding up if two values are equally close), equals <var>alpha</var>,
-   let <var>rounded</var> be that integer divided by 100.
-   <li>Otherwise, let <var>rounded</var> be <var>alpha</var> divided by 0.255 and rounded to the closest integer (rounding up if two values are equally close),
-   divided by 1000.
-   <li>Return the result of serializing <var>rounded</var> as a &lt;number>.
-  </ol>
-
-  Otherwise, return the result of serializing the given value as a &lt;number>.
+ See [[css-color-4#serializing-alpha-values]].
 
  <dt><<counter>>
  <dd>
